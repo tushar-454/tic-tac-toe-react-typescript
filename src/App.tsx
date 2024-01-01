@@ -1,9 +1,7 @@
+import Game from './components/Game';
+
 const App = () => {
-  return (
-    <div>
-      <h1>Tic Tac Toe React Typescript</h1>
-    </div>
-  );
+  return <Game />;
 };
 
 export default App;

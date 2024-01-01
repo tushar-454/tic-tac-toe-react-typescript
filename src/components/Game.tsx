@@ -1,0 +1,78 @@
+import styled from 'styled-components';
+
+type LayoutProps = {
+  gap: number;
+};
+
+const Row = styled.div<LayoutProps>`
+  display: flex;
+  flex-direction: row;
+  gap: ${(props) => props.gap}px;
+`;
+const Column = styled.div<LayoutProps>`
+  display: flex;
+  flex-direction: column;
+  gap: ${(props) => props.gap}px;
+`;
+
+const Game = () => {
+  return (
+    <Row gap={20}>
+      <Column gap={20}>
+        <div>Status</div>
+        <Board />
+      </Column>
+      <Log />
+    </Row>
+  );
+};
+
+const Board = () => {
+  return (
+    <Column>
+      <Row gap={0}>
+        <Square />
+        <Square />
+        <Square />
+      </Row>
+      <Row gap={0}>
+        <Square />
+        <Square />
+        <Square />
+      </Row>
+      <Row gap={0}>
+        <Square />
+        <Square />
+        <Square />
+      </Row>
+    </Column>
+  );
+};
+
+const StyledSquare = styled.button`
+  width: 34px;
+  height: 34px;
+  background: #fff;
+  border: 1px solid #999;
+  padding: 0;
+  font-size: 24px;
+  font-weight: bold;
+`;
+
+const Square = () => {
+  return <StyledSquare>X</StyledSquare>;
+};
+
+const Log = () => {
+  return (
+    <div>
+      <ol>
+        <li>
+          <button>Go to move</button>
+        </li>
+      </ol>
+    </div>
+  );
+};
+
+export default Game;
