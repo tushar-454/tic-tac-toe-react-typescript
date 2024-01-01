@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { BoardState, useGameState } from './GameState';
 
 type LayoutProps = {
   gap: number;
@@ -16,34 +17,49 @@ const Column = styled.div<LayoutProps>`
 `;
 
 const Game = () => {
+  const { gameState, current, xIsNext, winner, handleClick, jumpTo } =
+    useGameState();
   return (
     <Row gap={20}>
       <Column gap={20}>
-        <div>Status</div>
-        <Board />
+        <div>
+          {winner ? `Winner ${winner}` : `Next Player ${xIsNext ? 'X' : 'O'}`}
+        </div>
+        <Board board={current} onClick={handleClick} />
       </Column>
-      <Log />
+      <Log history={gameState.history} jumpTp={jumpTo} />
     </Row>
   );
 };
 
-const Board = () => {
+type BoardProps = {
+  board: BoardState;
+  onClick: (square: number) => void;
+};
+
+const Board = ({ board, onClick }: BoardProps) => {
+  const createProps = (square: number): SquareProps => {
+    return {
+      value: board[square],
+      onClick: () => onClick(square),
+    };
+  };
   return (
     <Column>
       <Row gap={0}>
-        <Square />
-        <Square />
-        <Square />
+        <Square {...createProps(0)} />
+        <Square {...createProps(1)} />
+        <Square {...createProps(2)} />
       </Row>
       <Row gap={0}>
-        <Square />
-        <Square />
-        <Square />
+        <Square {...createProps(3)} />
+        <Square {...createProps(4)} />
+        <Square {...createProps(5)} />
       </Row>
       <Row gap={0}>
-        <Square />
-        <Square />
-        <Square />
+        <Square {...createProps(6)} />
+        <Square {...createProps(7)} />
+        <Square {...createProps(8)} />
       </Row>
     </Column>
   );
@@ -58,18 +74,32 @@ const StyledSquare = styled.button`
   font-size: 24px;
   font-weight: bold;
 `;
-
-const Square = () => {
-  return <StyledSquare>X</StyledSquare>;
+type SquareProps = {
+  value: Value;
+  onClick: () => void;
+};
+const Square = (props: SquareProps) => {
+  return <StyledSquare onClick={props.onClick}>{props.value}</StyledSquare>;
 };
 
-const Log = () => {
+type LogProps = {
+  history: BoardState[];
+  jumpTo: (step: number) => void;
+};
+
+const Log = (props: LogProps) => {
   return (
     <div>
       <ol>
-        <li>
-          <button>Go to move</button>
-        </li>
+        {props.history.map((_, index) => {
+          return (
+            <li key={index}>
+              <button onClick={() => props.jumpTo(index)}>
+                Go to {index === 0 ? 'Start' : `Move #${index}`}
+              </button>
+            </li>
+          );
+        })}
       </ol>
     </div>
   );
